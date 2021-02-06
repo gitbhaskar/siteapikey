@@ -1,0 +1,5 @@
+name: Site Api Key
+description: This module is for alter site information page.
+type: module
+version: 1.x
+core: 8.x

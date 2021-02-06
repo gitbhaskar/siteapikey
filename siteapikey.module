@@ -1,0 +1,37 @@
+<?php
+
+use \Drupal\Core\Form\FormStateInterface;
+/**
+*@ This function is using for alter the forms...
+*/
+function siteapikey_form_alter(&$form, FormStateInterface $form_state, $form_id) { //print_r($form_id); exit;
+
+	if($form_id == 'system_site_information_settings'){	    
+	    $site_name = \Drupal::config('system.site')->get('siteapikey');
+		if(empty($site_name)){
+			$sitekey = 'No API Key yet';
+		}else{
+			$sitekey = $site_name;
+			$form['actions']['submit']['#value'] = t('Update Configuration');
+		}
+		$form['site_information']['site_api_key'] = array(
+			'#type' => 'textfield',
+			'#title' => t('Site API Key'),
+			'#default_value' => $sitekey,
+			'#weight' => 12,
+			'#required' => TRUE,
+		);		
+		$form['actions']['submit']['#submit'][] = 'save_siteapikey_value';
+	}	
+}
+
+/**
+*@ Submit function for form..
+*/
+function save_siteapikey_value($form, FormStateInterface &$form_state) {
+	$key = $form_state->getValue('site_api_key');
+	\Drupal::configFactory()->getEditable('system.site')->set('siteapikey', $key)->save();
+	unset($_SESSION['messages']['status']);
+	$messenger = \Drupal::messenger();
+	$messenger->addStatus('Site API Key has been saved with that value '.$key);
+}

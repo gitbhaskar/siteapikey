@@ -1,0 +1,8 @@
+siteapikey.export:
+  path: '/page_json/{type}/{node}'
+  defaults:
+    _controller: '\Drupal\siteapikey\Controller\NodeController::nodeExport'
+  methods:  [GET]
+  requirements:
+    _permission: 'access content'
+    _entity_access: 'node.view'
